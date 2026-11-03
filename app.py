@@ -445,7 +445,8 @@ def _run_hf_tryon(person_path: str, cloth_path: str) -> tuple[str, str]:
         result = leffa.predict(
             src_image_path=handle_file(person_path),
             ref_image_path=handle_file(cloth_path),
-            ref_acceleration=False,
+            # Leffa API expects string literals 'True'/'False', NOT Python booleans
+            ref_acceleration="False",
             # Higher steps → better garment-body blending quality
             step=40,
             # Higher scale → model follows the source-person's body shape
@@ -456,9 +457,9 @@ def _run_hf_tryon(person_path: str, cloth_path: str) -> tuple[str, str]:
             # full-dress model; VITON-HD is trained for upper-body garments.
             vt_model_type="dress_code",
             vt_garment_type="dresses",
-            # repaint=True preserves the person's original body silhouette
+            # repaint='True' preserves the person's original body silhouette
             # instead of replacing it with the model's idealised body shape.
-            vt_repaint=True,
+            vt_repaint="True",
             api_name="/leffa_predict_vt",
         )
         generated_path = result[0] if isinstance(result, (list, tuple)) else result
